@@ -245,6 +245,9 @@
                 {% else %}
                     <a href="{% url 'web-login' %}">Connexion</a>
                 {% endif %}
+                {% if user.is_authenticated %}
+                    <span style="font-size: 0.8rem; opacity: 0.7;">{{ user.prenom }} {{ user.nom }} ({{ user.email }})</span>
+                {% endif %}
             </nav>
         </div>
     </header>
