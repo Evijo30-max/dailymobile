@@ -90,3 +90,19 @@ class CheckoutSerializer(serializers.Serializer):
                         field: "Ce champ est obligatoire pour une livraison."
                     })
         return data
+
+
+class CommandeListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Commande
+        fields = (
+            'id_commande',
+            'reference',
+            'total',
+            'mode_reception',
+            'statut',
+            'date_creation',
+        )
+
+
+        

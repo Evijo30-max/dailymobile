@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     PanierView, AjouterAuPanierView,
     ModifierLignePanierView, SupprimerLignePanierView,
-    CheckoutView
+    CheckoutView, MesCommandesView,
 )
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('panier/lignes/<int:id_ligne>/', ModifierLignePanierView.as_view(), name='panier-modifier-ligne'),
     path('panier/lignes/<int:id_ligne>/supprimer/', SupprimerLignePanierView.as_view(), name='panier-supprimer-ligne'),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
+    path('mes-commandes/', MesCommandesView.as_view(), name='mes-commandes'),
 ]

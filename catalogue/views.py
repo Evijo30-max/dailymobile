@@ -1,4 +1,8 @@
-from django.shortcuts import render
+
+
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Produit
 
 # Create your views here.
 from rest_framework import generics
@@ -44,3 +48,35 @@ class ProduitDetailView(generics.RetrieveAPIView):
                 'variantes__caracteristiques__id_caracteristique',
             )
         )
+
+
+class CatalogueListWebView(View):
+    """Page publique : liste des produits."""
+
+    def get(self, request):
+        produits = (
+            Produit.objects
+            .filter(actif=True)
+            .select_related('id_marque')
+            .order_by('nom')
+        )
+        return render(request, 'catalogue/liste.html', {
+            'produits': produits,
+        })
+
+
+class CatalogueDetailWebView(View):
+    """Page publique : détail d'un produit."""
+
+    def get(self, request, slug):
+        produit = get_object_or_404(
+            Produit.objects
+            .filter(actif=True)
+            .select_related('id_marque')
+            .prefetch_related('variantes__offres'),
+            slug=slug
+        )
+        return render(request, 'catalogue/detail.html', {
+            'produit': produit,
+        })
+        

@@ -98,3 +98,22 @@ class Utilisateur(models.Model):
     @property
     def is_client(self) -> bool:
         return self.role == self.Role.CLIENT and self.actif
+
+    @property
+    def is_staff(self):
+        """Requis par Django admin. Seuls les ADMIN y ont accès."""
+        return self.role == self.Role.ADMIN and self.actif
+
+    @property
+    def is_superuser(self):
+        return self.role == self.Role.ADMIN and self.actif
+
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+
+    def has_module_perms(self, app_label):
+        return self.is_admin
+
+    def get_username(self):
+        """Utilisé par Django admin / auth."""
+        return self.email or self.telephone or str(self.pk)

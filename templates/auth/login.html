@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Connexion — Dailymobile{% endblock %}
+{% block content %}
+<div class="form-card">
+    <h1 style="font-size: 1.75rem; margin-bottom: 24px;">Connexion</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Email ou téléphone</label>
+            <input type="text" name="identifiant" required>
+        </div>
+        <div class="form-group">
+            <label>Mot de passe</label>
+            <input type="password" name="password" required>
+        </div>
+        <button type="submit" class="btn" style="width: 100%;">Se connecter</button>
+    </form>
+    <p class="text-center mt-3" style="font-size: 0.9rem;">
+        Pas de compte ? <a href="{% url 'web-register' %}" style="color: var(--accent);">Créer un compte</a>
+    </p>
+</div>
+{% endblock %}

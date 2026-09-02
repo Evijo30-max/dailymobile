@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Demande de réparation — Dailymobile{% endblock %}
+
+{% block content %}
+<h1>Demande de réparation</h1>
+<p class="subtitle">Décrivez votre appareil et le problème. Nous vous recontactons.</p>
+
+<div class="form-card" style="max-width: 520px;">
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Nom complet *</label>
+            <input type="text" name="nom_client" required
+                   value="{% if user.is_authenticated %}{{ user.prenom }} {{ user.nom }}{% endif %}">
+        </div>
+
+        <div class="form-group">
+            <label>Téléphone *</label>
+            <input type="text" name="telephone_client" required
+                   value="{% if user.is_authenticated %}{{ user.telephone|default:'' }}{% endif %}">
+        </div>
+
+        <div class="form-group">
+            <label>Email (optionnel)</label>
+            <input type="email" name="email_client"
+                   value="{% if user.is_authenticated %}{{ user.email|default:'' }}{% endif %}">
+        </div>
+
+        <div class="form-group">
+            <label>Marque de l'appareil *</label>
+            <input type="text" name="marque" placeholder="Apple, Samsung, HP..." required>
+        </div>
+
+        <div class="form-group">
+            <label>Modèle *</label>
+            <input type="text" name="modele" placeholder="iPhone 13, Galaxy S21..." required>
+        </div>
+
+        <div class="form-group">
+            <label>Problème rencontré *</label>
+            <textarea name="motif_depot" rows="3" required
+                      placeholder="Écran cassé, ne s'allume plus, batterie..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>État physique actuel</label>
+            <textarea name="etat_physique_entree" rows="2"
+                      placeholder="Rayures, chocs, état général..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Mode de prise en charge</label>
+            <select name="type_prise_en_charge">
+                <option value="DEPOT">Je dépose l'appareil en boutique</option>
+                <option value="COLLECTE">Je souhaite une collecte à domicile</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn" style="width: 100%;">Envoyer la demande</button>
+    </form>
+</div>
+{% endblock %}

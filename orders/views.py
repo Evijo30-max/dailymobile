@@ -22,6 +22,9 @@ from .serializers import (
     ModifierLignePanierSerializer, CheckoutSerializer
 )
 
+from rest_framework import generics
+from .serializers import CommandeListSerializer
+from .models import Commande
 
 def get_or_create_panier_actif(utilisateur):
     """Retourne le panier ACTIF de l'utilisateur (en crée un s'il n'existe pas)."""
@@ -276,4 +279,20 @@ class CheckoutView(APIView):
                 "statut": commande.statut,
             },
             status=status.HTTP_201_CREATED
+        )
+
+
+class MesCommandesView(generics.ListAPIView):
+    """
+    GET /api/orders/mes-commandes/
+    Liste des commandes de l'utilisateur connecté.
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = CommandeListSerializer
+
+    def get_queryset(self):
+        return (
+            Commande.objects
+            .filter(id_utilisateur=self.request.user)
+            .order_by('-date_creation')
         )
