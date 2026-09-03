@@ -45,13 +45,23 @@ class CategorieAdmin(admin.ModelAdmin):
 
 @admin.register(Produit)
 class ProduitAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'id_marque', 'slug', 'actif', 'date_creation', 'image_url')
+    list_display = ('nom', 'id_marque', 'slug', 'actif', 'date_creation')
     list_filter = ('actif', 'id_marque')
     search_fields = ('nom', 'slug')
     prepopulated_fields = {'slug': ('nom',)}
     list_editable = ('actif',)
     inlines = [VarianteInline]
     autocomplete_fields = ['id_marque']
+
+    fieldsets = (
+        (None, {
+            'fields': ('nom', 'id_marque', 'slug', 'description', 'actif')
+        }),
+        ('Image', {
+            'fields': ('image_file', 'image_url'),
+            'description': 'Uploadez un fichier OU collez une URL directe (jpg/png). Le fichier a la priorité.',
+        }),
+    )
 
 
 @admin.register(Variante)

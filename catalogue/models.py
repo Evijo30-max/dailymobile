@@ -65,8 +65,29 @@ class Produit(models.Model):
     actif = models.BooleanField(default=True)
     date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
-    image_url = models.CharField(max_length=500, null=True, blank=True)
+    
+    #image uploadée depuis le pc
+    image_file = models.ImageField(
+        upload_to='produits/',
+        null=True,
+        blank=True,
+        db_column='image_file',
+        verbose_name='Image (fichier)',
+    )
+    # OU lien web direct
+    image_url = models.CharField(
+        max_length=500,
+        null=True,
+        blank=True,
+        verbose_name='Image (URL web)',
+    )
 
+    @property
+    def image_display_url(self):
+        """Priorité : fichier uploadé, sinon URL web."""
+        if self.image_file:
+            return self.image_file.url
+        return self.image_url or None
     
     categories = models.ManyToManyField(
         Categorie,

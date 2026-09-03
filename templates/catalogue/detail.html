@@ -9,10 +9,10 @@
 
 <div class="detail-hero">
     <div class="img-wrap">
-        {% if produit.image_url %}
-            <img src="{{ produit.image_url }}" alt="{{ produit.nom }}">
+        {% if produit.image_display_url %}
+            <img src="{{ produit.image_display_url }}" alt="{{ produit.nom }}">
         {% else %}
-            <div class="img-placeholder" style="width:160px;height:160px;">Photo</div>
+            <div class="img-placeholder">Photo</div>
         {% endif %}
     </div>
     <div>

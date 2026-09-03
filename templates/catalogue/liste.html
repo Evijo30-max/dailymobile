@@ -13,8 +13,8 @@
     {% for produit in produits %}
     <a href="{% url 'web-produit-detail' produit.slug %}" class="product-card">
         <div class="img-wrap">
-            {% if produit.image_url %}
-                <img src="{{ produit.image_url }}" alt="{{ produit.nom }}">
+            {% if produit.image_display_url %}
+                <img src="{{ produit.image_display_url }}" alt="{{ produit.nom }}">
             {% else %}
                 <div class="img-placeholder">Photo</div>
             {% endif %}
