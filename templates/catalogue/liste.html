@@ -1,11 +1,34 @@
 {% extends "base.html" %}
-
-{% block title %}Dailymobile — Boutique & Réparation{% endblock %}
+{% block title %}Catalogue — Dailymobile{% endblock %}
 
 {% block content %}
+
+{% if categories %}
+<nav class="category-bar">
+    <div class="category-bar-inner">
+        <a href="{% url 'web-catalogue' %}"
+           class="category-pill {% if not categorie_active %}active{% endif %}">
+            Tout
+        </a>
+        {% for cat in categories %}
+        <a href="{% url 'web-catalogue' %}?categorie={{ cat.slug }}"
+           class="category-pill {% if categorie_active and categorie_active.id_categorie == cat.id_categorie %}active{% endif %}">
+            {{ cat.nom }}
+        </a>
+        {% endfor %}
+    </div>
+</nav>
+{% endif %}
+
 <section class="hero">
-    <h1>Dailymobile</h1>
-    <p class="subtitle">Téléphones et ordinateurs. Vente et réparation à Douala.</p>
+    <h1>{% if categorie_active %}{{ categorie_active.nom }}{% else %}Dailymobile{% endif %}</h1>
+    <p class="subtitle">
+        {% if categorie_active and categorie_active.description %}
+            {{ categorie_active.description }}
+        {% else %}
+            Téléphones et ordinateurs. Vente et réparation à Douala.
+        {% endif %}
+    </p>
 </section>
 
 {% if produits %}
@@ -31,7 +54,7 @@
 </div>
 {% else %}
 <p class="text-center" style="color: var(--text-secondary); padding: 80px 0;">
-    Aucun produit pour le moment.
+    Aucun produit dans cette catégorie.
 </p>
 {% endif %}
 {% endblock %}

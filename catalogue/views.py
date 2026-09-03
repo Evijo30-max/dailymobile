@@ -50,18 +50,32 @@ class ProduitDetailView(generics.RetrieveAPIView):
         )
 
 
-class CatalogueListWebView(View):
-    """Page publique : liste des produits."""
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Produit, Categorie
 
+
+class CatalogueListWebView(View):
     def get(self, request):
+        categories = Categorie.objects.filter(actif=True).order_by('nom')
+        slug_cat = request.GET.get('categorie')
+
         produits = (
             Produit.objects
             .filter(actif=True)
             .select_related('id_marque')
             .order_by('nom')
         )
+
+        categorie_active = None
+        if slug_cat:
+            categorie_active = get_object_or_404(Categorie, slug=slug_cat, actif=True)
+            produits = produits.filter(categories=categorie_active)
+
         return render(request, 'catalogue/liste.html', {
             'produits': produits,
+            'categories': categories,
+            'categorie_active': categorie_active,
         })
 
 
