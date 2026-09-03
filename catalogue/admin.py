@@ -45,7 +45,7 @@ class CategorieAdmin(admin.ModelAdmin):
 
 @admin.register(Produit)
 class ProduitAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'id_marque', 'slug', 'actif', 'date_creation')
+    list_display = ('nom', 'id_marque', 'slug', 'actif', 'date_creation', 'image_url')
     list_filter = ('actif', 'id_marque')
     search_fields = ('nom', 'slug')
     prepopulated_fields = {'slug': ('nom',)}

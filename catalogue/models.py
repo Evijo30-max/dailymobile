@@ -65,7 +65,9 @@ class Produit(models.Model):
     actif = models.BooleanField(default=True)
     date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
+    image_url = models.CharField(max_length=500, null=True, blank=True)
 
+    
     categories = models.ManyToManyField(
         Categorie,
         through='ProduitCategorie',

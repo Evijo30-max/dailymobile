@@ -3,53 +3,65 @@
 {% block title %}{{ produit.nom }} — Dailymobile{% endblock %}
 
 {% block content %}
-<p style="margin-bottom: 12px;">
-    <a href="{% url 'web-catalogue' %}" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">← Catalogue</a>
+<p style="padding-top: 24px;">
+    <a href="{% url 'web-catalogue' %}" class="btn-secondary">← Catalogue</a>
 </p>
 
-<p class="brand" style="color: var(--text-secondary); font-size: 0.95rem;">{{ produit.id_marque.nom }}</p>
-<h1>{{ produit.nom }}</h1>
-
-{% if produit.description %}
-<p class="subtitle">{{ produit.description }}</p>
-{% endif %}
+<div class="detail-hero">
+    <div class="img-wrap">
+        {% if produit.image_url %}
+            <img src="{{ produit.image_url }}" alt="{{ produit.nom }}">
+        {% else %}
+            <div class="img-placeholder" style="width:160px;height:160px;">Photo</div>
+        {% endif %}
+    </div>
+    <div>
+        <p class="brand" style="text-transform:uppercase;font-size:12px;color:var(--text-secondary);letter-spacing:0.04em;">
+            {{ produit.id_marque.nom }}
+        </p>
+        <h1>{{ produit.nom }}</h1>
+        {% if produit.description %}
+        <p style="color:var(--text-secondary);font-size:17px;margin-bottom:28px;">{{ produit.description }}</p>
+        {% endif %}
+    </div>
+</div>
 
 {% for variante in produit.variantes.all %}
     {% if variante.actif %}
-    <div style="background: var(--surface); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow);">
-        <h2 style="font-size: 1.15rem; margin-bottom: 12px;">{{ variante.nom }}</h2>
+    <div class="variant-card">
+        <h2>{{ variante.nom }}</h2>
         {% if variante.sku %}
-        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 12px;">SKU : {{ variante.sku }}</p>
+        <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">{{ variante.sku }}</p>
         {% endif %}
 
         {% for offre in variante.offres.all %}
             {% if offre.actif %}
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:12px;">
                 <div>
-                    <span style="font-size: 1.25rem; font-weight: 600;">{{ offre.prix_vente }} FCFA</span>
-                    <span style="color: var(--text-secondary); font-size: 0.85rem; margin-left: 8px;">
+                    <p class="price">{{ offre.prix_vente }} FCFA</p>
+                    <p style="color:var(--text-secondary);font-size:13px;margin-top:4px;">
                         {{ offre.get_type_offre_display }}
-                        {% if offre.type_offre == 'NEUF' %} · Stock : {{ offre.quantite_disponible }}{% endif %}
-                    </span>
+                        {% if offre.type_offre == 'NEUF' %} · {{ offre.quantite_disponible }} en stock{% endif %}
+                    </p>
                 </div>
                 {% if user.is_authenticated %}
-<form method="post" action="{% url 'web-ajouter-panier' %}">
-    {% csrf_token %}
-    <input type="hidden" name="id_offre" value="{{ offre.id_offre }}">
-    <input type="hidden" name="quantite" value="1">
-    <button type="submit" class="btn">Ajouter au panier</button>
-</form>
-{% else %}
-<a href="{% url 'web-login' %}" class="btn">Se connecter pour acheter</a>
-{% endif %}
+                <form method="post" action="{% url 'web-ajouter-panier' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="id_offre" value="{{ offre.id_offre }}">
+                    <input type="hidden" name="quantite" value="1">
+                    <button type="submit" class="btn">Ajouter au panier</button>
+                </form>
+                {% else %}
+                <a href="{% url 'web-login' %}" class="btn">Se connecter pour acheter</a>
+                {% endif %}
             </div>
             {% endif %}
         {% empty %}
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Aucune offre disponible.</p>
+            <p style="color:var(--text-secondary);font-size:14px;">Aucune offre.</p>
         {% endfor %}
     </div>
     {% endif %}
 {% empty %}
-    <p style="color: var(--text-secondary);">Aucune variante disponible.</p>
+<p style="color:var(--text-secondary);">Aucune variante.</p>
 {% endfor %}
 {% endblock %}

@@ -3,31 +3,35 @@
 {% block title %}Dailymobile — Boutique & Réparation{% endblock %}
 
 {% block content %}
-<div style="text-align: center; margin-bottom: 48px;">
+<section class="hero">
     <h1>Dailymobile</h1>
-    <p class="subtitle" style="max-width: 520px; margin: 0 auto 8px;">
-        Téléphones, ordinateurs et accessoires.<br>
-        Vente et réparation à Douala.
-    </p>
-</div>
+    <p class="subtitle">Téléphones et ordinateurs. Vente et réparation à Douala.</p>
+</section>
 
 {% if produits %}
 <div class="products-grid">
     {% for produit in produits %}
     <a href="{% url 'web-produit-detail' produit.slug %}" class="product-card">
-        <p class="brand">{{ produit.id_marque.nom }}</p>
-        <h2>{{ produit.nom }}</h2>
-        {% if produit.description %}
-        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px;">
-            {{ produit.description|truncatewords:12 }}
-        </p>
-        {% endif %}
+        <div class="img-wrap">
+            {% if produit.image_url %}
+                <img src="{{ produit.image_url }}" alt="{{ produit.nom }}">
+            {% else %}
+                <div class="img-placeholder">Photo</div>
+            {% endif %}
+        </div>
+        <div class="info">
+            <p class="brand">{{ produit.id_marque.nom }}</p>
+            <h2>{{ produit.nom }}</h2>
+            {% if produit.description %}
+            <p class="desc">{{ produit.description|truncatewords:10 }}</p>
+            {% endif %}
+        </div>
     </a>
     {% endfor %}
 </div>
 {% else %}
-<p class="text-center" style="color: var(--text-secondary); margin-top: 60px;">
-    Aucun produit disponible pour le moment.
+<p class="text-center" style="color: var(--text-secondary); padding: 80px 0;">
+    Aucun produit pour le moment.
 </p>
 {% endif %}
 {% endblock %}
