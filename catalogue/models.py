@@ -109,14 +109,22 @@ class Produit(models.Model):
 
 class ProduitCategorie(models.Model):
     """Table de liaison N-N Produit ↔ Categorie."""
-    id_produit = models.ForeignKey(Produit, on_delete=models.CASCADE, db_column='id_produit')
-    id_categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, db_column='id_categorie')
+    pk = models.CompositePrimaryKey('id_produit', 'id_categorie')
+
+    id_produit = models.ForeignKey(
+        Produit,
+        on_delete=models.CASCADE,
+        db_column='id_produit',
+    )
+    id_categorie = models.ForeignKey(
+        Categorie,
+        on_delete=models.CASCADE,
+        db_column='id_categorie',
+    )
 
     class Meta:
         db_table = 'produit_categorie'
         managed = False
-        unique_together = (('id_produit', 'id_categorie'),)
-
 
 class Variante(models.Model):
     """Variante d'un produit (ex: 128 Go Noir). Contient le SKU."""

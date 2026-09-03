@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    Marque, Categorie, Produit,
+    Marque, Categorie, Produit, ProduitCategorie,
     Variante, Caracteristique, VarianteCaracteristique,
     EtatProduit, EmplacementStock, OffreProduit, UniteProduit
 )
@@ -43,6 +43,12 @@ class CategorieAdmin(admin.ModelAdmin):
     list_editable = ('actif',)
 
 
+class ProduitCategorieInline(admin.TabularInline):
+    model = ProduitCategorie
+    extra = 1
+    autocomplete_fields = ['id_categorie']
+
+
 @admin.register(Produit)
 class ProduitAdmin(admin.ModelAdmin):
     list_display = ('nom', 'id_marque', 'slug', 'actif', 'date_creation')
@@ -50,7 +56,7 @@ class ProduitAdmin(admin.ModelAdmin):
     search_fields = ('nom', 'slug')
     prepopulated_fields = {'slug': ('nom',)}
     list_editable = ('actif',)
-    inlines = [VarianteInline]
+    inlines = [ProduitCategorieInline, VarianteInline]
     autocomplete_fields = ['id_marque']
 
     fieldsets = (
