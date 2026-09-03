@@ -3,16 +3,17 @@
 
 {% block content %}
 
-{% if categories %}
+{# ===== Barre 1 : catégories principales ===== #}
+{% if categories_principales %}
 <nav class="category-bar">
     <div class="category-bar-inner">
         <a href="{% url 'web-catalogue' %}"
            class="category-pill {% if not categorie_active %}active{% endif %}">
             Tout
         </a>
-        {% for cat in categories %}
+        {% for cat in categories_principales %}
         <a href="{% url 'web-catalogue' %}?categorie={{ cat.slug }}"
-           class="category-pill {% if categorie_active and categorie_active.id_categorie == cat.id_categorie %}active{% endif %}">
+           class="category-pill {% if categorie_active and categorie_active.slug == cat.slug or categorie_active.id_categorie_parent_id == cat.id_categorie %}active{% endif %}">
             {{ cat.nom }}
         </a>
         {% endfor %}
@@ -20,8 +21,44 @@
 </nav>
 {% endif %}
 
+{# ===== Barre 2a : sous-catégories (Portable/Fixe ou types accessoires) ===== #}
+{% if show_subnav_categories %}
+<nav class="category-bar" style="top: 88px; border-top: none;">
+    <div class="category-bar-inner">
+        {% for sub in sous_categories %}
+        <a href="{% url 'web-catalogue' %}?categorie={{ sub.slug }}"
+           class="category-pill {% if categorie_active and categorie_active.id_categorie == sub.id_categorie %}active{% endif %}">
+            {{ sub.nom }}
+        </a>
+        {% endfor %}
+    </div>
+</nav>
+{% endif %}
+
+{# ===== Barre 2b/3 : marques ===== #}
+{% if show_subnav_marques and marques %}
+<nav class="category-bar" style="top: {% if show_subnav_categories %}132px{% else %}88px{% endif %}; border-top: none;">
+    <div class="category-bar-inner">
+        <a href="{% url 'web-catalogue' %}?categorie={{ categorie_active.slug }}"
+           class="category-pill {% if not marque_active %}active{% endif %}">
+            Toutes marques
+        </a>
+        {% for m in marques %}
+        <a href="{% url 'web-catalogue' %}?categorie={{ categorie_active.slug }}&marque={{ m.id_marque }}"
+           class="category-pill {% if marque_active and marque_active.id_marque == m.id_marque %}active{% endif %}">
+            {{ m.nom }}
+        </a>
+        {% endfor %}
+    </div>
+</nav>
+{% endif %}
+
 <section class="hero">
-    <h1>{% if categorie_active %}{{ categorie_active.nom }}{% else %}Dailymobile{% endif %}</h1>
+    <h1>
+        {% if marque_active %}{{ marque_active.nom }}
+        {% elif categorie_active %}{{ categorie_active.nom }}
+        {% else %}Dailymobile{% endif %}
+    </h1>
     <p class="subtitle">
         {% if categorie_active and categorie_active.description %}
             {{ categorie_active.description }}
@@ -54,7 +91,7 @@
 </div>
 {% else %}
 <p class="text-center" style="color: var(--text-secondary); padding: 80px 0;">
-    Aucun produit dans cette catégorie.
+    Aucun produit dans cette sélection.
 </p>
 {% endif %}
 {% endblock %}
