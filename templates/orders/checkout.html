@@ -1,17 +1,20 @@
 {% extends "base.html" %}
 {% block title %}Commander — Dailymobile{% endblock %}
-{% block content %}
-<h1>Finaliser la commande</h1>
-<p class="subtitle">Total articles : {{ total }} FCFA</p>
 
-<div class="form-card" style="max-width: 520px;">
+{% block content %}
+<section class="hero" style="padding: 48px 0 24px;">
+    <h1 style="font-size: 40px;">Commander</h1>
+    <p class="subtitle">Total articles · {{ total }} FCFA</p>
+</section>
+
+<div class="form-card" style="max-width: 480px;">
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
             <label>Mode de réception</label>
             <select name="mode_reception" id="mode" onchange="toggleLivraison()">
                 <option value="RETRAIT_BOUTIQUE">Retrait en boutique</option>
-                <option value="LIVRAISON">Livraison</option>
+                <option value="LIVRAISON">Livraison à domicile</option>
             </select>
         </div>
 
@@ -26,7 +29,7 @@
             </div>
             <div class="form-group">
                 <label>Ville</label>
-                <input type="text" name="ville_nom" placeholder="Douala, Yaoundé...">
+                <input type="text" name="ville_nom" placeholder="Douala, Yaoundé…">
             </div>
             <div class="form-group">
                 <label>Quartier</label>
@@ -42,13 +45,15 @@
             </div>
         </div>
 
-        <button type="submit" class="btn" style="width: 100%; margin-top: 12px;">Confirmer la commande</button>
+        <button type="submit" class="btn" style="width: 100%; margin-top: 12px;">
+            Confirmer la commande
+        </button>
     </form>
 </div>
 
 <script>
 function toggleLivraison() {
-    const mode = document.getElementById('mode').value;
+    var mode = document.getElementById('mode').value;
     document.getElementById('livraison-fields').style.display =
         mode === 'LIVRAISON' ? 'block' : 'none';
 }

@@ -1,22 +1,33 @@
 {% extends "base.html" %}
 {% block title %}Connexion — Dailymobile{% endblock %}
+
 {% block content %}
-<div class="form-card">
-    <h1 style="font-size: 1.75rem; margin-bottom: 24px;">Connexion</h1>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label>Email ou téléphone</label>
-            <input type="text" name="identifiant" required>
-        </div>
-        <div class="form-group">
-            <label>Mot de passe</label>
-            <input type="password" name="password" required>
-        </div>
-        <button type="submit" class="btn" style="width: 100%;">Se connecter</button>
-    </form>
-    <p class="text-center mt-3" style="font-size: 0.9rem;">
-        Pas de compte ? <a href="{% url 'web-register' %}" style="color: var(--accent);">Créer un compte</a>
-    </p>
+<div style="padding: 60px 0 40px;">
+    <div class="form-card">
+        <h1 style="font-size: 28px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 8px; text-align: center;">
+            Connexion
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 15px; text-align: center; margin-bottom: 32px;">
+            Accédez à votre compte Dailymobile
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Email ou téléphone</label>
+                <input type="text" name="identifiant" required placeholder="ex. 677000000" autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" name="password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn" style="width: 100%; margin-top: 8px;">Se connecter</button>
+        </form>
+
+        <p class="text-center mt-3" style="font-size: 14px; color: var(--text-secondary);">
+            Pas de compte ?
+            <a href="{% url 'web-register' %}" style="color: var(--accent); text-decoration: none;">Créer un compte</a>
+        </p>
+    </div>
 </div>
 {% endblock %}

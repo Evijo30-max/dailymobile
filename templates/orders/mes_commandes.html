@@ -1,29 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Mes commandes — Dailymobile{% endblock %}
+
 {% block content %}
-<h1>Mes commandes</h1>
-<p class="subtitle">Historique de vos commandes.</p>
+<section class="hero" style="padding: 48px 0 32px;">
+    <h1 style="font-size: 40px;">Mes commandes</h1>
+    <p class="subtitle">Historique de vos achats</p>
+</section>
 
 {% if commandes %}
-<div style="background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;">
+<div style="background: var(--bg-alt); border-radius: var(--radius); overflow: hidden; max-width: 720px; margin: 0 auto;">
     {% for cmd in commandes %}
-    <div style="padding: 20px 24px; border-bottom: 1px solid var(--border);">
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-            <div>
-                <strong>{{ cmd.reference }}</strong>
-                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px;">
-                    {{ cmd.date_creation|date:"d/m/Y H:i" }} · {{ cmd.get_mode_reception_display }}
-                </p>
-            </div>
-            <div style="text-align: right;">
-                <p style="font-weight: 600;">{{ cmd.total }} FCFA</p>
-                <p style="font-size: 0.85rem; color: var(--text-secondary);">{{ cmd.get_statut_display }}</p>
-            </div>
+    <div style="padding: 24px 28px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+        <div>
+            <p style="font-size: 17px; font-weight: 600; letter-spacing: -0.02em;">{{ cmd.reference }}</p>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-top: 4px;">
+                {{ cmd.date_creation|date:"d/m/Y H:i" }} · {{ cmd.get_mode_reception_display }}
+            </p>
+        </div>
+        <div style="text-align: right;">
+            <p style="font-size: 17px; font-weight: 600;">{{ cmd.total }} FCFA</p>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-top: 4px;">
+                {{ cmd.get_statut_display }}
+            </p>
         </div>
     </div>
     {% endfor %}
 </div>
 {% else %}
-<p style="color: var(--text-secondary); margin-top: 40px;">Aucune commande pour le moment.</p>
+<p class="text-center" style="color: var(--text-secondary); padding: 48px 0;">
+    Aucune commande pour le moment.
+</p>
+<p class="text-center">
+    <a href="{% url 'web-catalogue' %}" class="btn">Voir le catalogue</a>
+</p>
 {% endif %}
 {% endblock %}

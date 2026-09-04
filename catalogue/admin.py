@@ -46,7 +46,7 @@ class CategorieAdmin(admin.ModelAdmin):
 class ProduitCategorieInline(admin.TabularInline):
     model = ProduitCategorie
     extra = 1
-    autocomplete_fields = ['id_categorie']
+    fields = ('id_categorie',)
 
 
 @admin.register(Produit)
