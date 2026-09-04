@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Dailymobile{% endblock %}</title>
+    <script>
+        (function () {
+            var t = localStorage.getItem('dm-theme');
+            if (t === 'dark' || t === 'light') {
+                document.documentElement.setAttribute('data-theme', t);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
     <style>
         :root {
             --bg: #ffffff;
@@ -16,6 +26,22 @@
             --radius: 18px;
             --shadow: 0 4px 24px rgba(0,0,0,0.06);
             --shadow-hover: 0 12px 40px rgba(0,0,0,0.12);
+            --header-bg: rgba(251,251,253,0.72);
+            --input-bg: #ffffff;
+        }
+
+        html[data-theme="dark"] {
+            --bg: #000000;
+            --bg-alt: #1c1c1e;
+            --text: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --accent: #2997ff;
+            --accent-hover: #4dabff;
+            --border: #38383a;
+            --shadow: 0 4px 24px rgba(0,0,0,0.4);
+            --shadow-hover: 0 12px 40px rgba(0,0,0,0.55);
+            --header-bg: rgba(22,22,23,0.8);
+            --input-bg: #2c2c2e;
         }
     
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,6 +57,7 @@
             letter-spacing: -0.022em;
             min-height: 100vh;
             animation: page-in 0.5s ease both;
+            transition: background 0.35s ease, color 0.35s ease;
         }
     
         @keyframes page-in {
@@ -40,7 +67,7 @@
     
         /* ===== Header ===== */
         header {
-            background: rgba(251,251,253,0.72);
+            background: var(--header-bg);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
             border-bottom: 1px solid rgba(0,0,0,0.06);
@@ -112,7 +139,7 @@
     
         /* ===== Category bar ===== */
         .category-bar {
-            background: rgba(255,255,255,0.72);
+            background: var(--header-bg);
             backdrop-filter: saturate(180%) blur(16px);
             -webkit-backdrop-filter: saturate(180%) blur(16px);
             border-bottom: 1px solid rgba(0,0,0,0.06);
@@ -364,9 +391,10 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             font-size: 16px;
-            background: #fff;
+            background: var(--input-bg);
             font-family: inherit;
             transition: border-color 0.2s, box-shadow 0.2s;
+            color: var(--text);
         }
         .form-group input:focus,
         .form-group select:focus,
@@ -471,6 +499,48 @@
                 transition-duration: 0.01ms !important;
             }
         }
+
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            margin-left: 4px;
+            border: none;
+            border-radius: 50%;
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            opacity: 0.85;
+            transition: opacity 0.2s, background 0.2s, transform 0.2s;
+        }
+
+        .theme-toggle:hover {
+            opacity: 1;
+            background: rgba(128,128,128,0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.92);
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* En mode clair : afficher la lune */
+        html[data-theme="light"] .icon-sun,
+        html:not([data-theme]) .icon-sun { display: none; }
+
+        html[data-theme="light"] .icon-moon,
+        html:not([data-theme]) .icon-moon { display: block; }
+
+        /* En mode sombre : afficher le soleil */
+        html[data-theme="dark"] .icon-sun { display: block; }
+        html[data-theme="dark"] .icon-moon { display: none; }
+
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -522,6 +592,18 @@
                     </svg>
                     Connexion
                 </a>
+                
+                <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Changer le thème" title="Mode clair / sombre">
+                    <!-- Soleil (affiché en dark mode = cliquer pour repasser en clair) -->
+                    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+                    </svg>
+                    <!-- Lune (affiché en light mode) -->
+                    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/>
+                    </svg>
+                </button>
                 {% endif %}
             </nav>
         </div>
@@ -551,6 +633,37 @@
             }, { passive: true });
         })();
     </script>
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById('theme-toggle');
+            var header = document.getElementById('site-header');
+        
+            // Thème sauvegardé ou préférence système
+            var saved = localStorage.getItem('dm-theme');
+            if (saved === 'dark' || saved === 'light') {
+                root.setAttribute('data-theme', saved);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                root.setAttribute('data-theme', 'dark');
+            } else {
+                root.setAttribute('data-theme', 'light');
+            }
+        
+            if (toggle) {
+                toggle.addEventListener('click', function () {
+                    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    root.setAttribute('data-theme', next);
+                    localStorage.setItem('dm-theme', next);
+                });
+            }
+        
+            if (header) {
+                window.addEventListener('scroll', function () {
+                    header.classList.toggle('scrolled', window.scrollY > 8);
+                }, { passive: true });
+            }
+        })();
+        </script>
 
 </body>
 </html>
